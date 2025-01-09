@@ -55,7 +55,7 @@ FFmpeg for Conversion: The project uses FFmpeg to convert the WebM file to WAV. 
 
 ### Step 1: Clone the Project
 ```bash
-git clone https://github.com/Peliah/lecture_transcriber.git
+git clone https://github.com/YoungWinny/lectrans.git
 cd lecture_transcriber
 ```
 
