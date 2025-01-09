@@ -1,0 +1,65 @@
+.recording-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #dc3545;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.recording-indicator.active {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.audio-player-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.transcription-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.lecture-card {
+    transition: transform 0.2s;
+}
+
+.lecture-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .audio-player-container {
+        padding: 10px;
+    }
+
+    .transcription-container {
+        max-height: 300px;
+    }
+}

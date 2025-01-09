@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Lectures{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Manage Lectures</h2>
+
+            {% for class in classes %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3>{{ class.name }} ({{ class.academic_year }})</h3>
+                </div>
+                <div class="card-body">
+                    {% for course in class.courses %}
+                    <div class="mb-4">
+                        <h4>{{ course.name }}</h4>
+                        <p class="text-muted">Instructor: {{ course.instructor }}</p>
+
+                        {% if course.lectures %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Chapter</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for lecture in course.lectures %}
+                                    <tr>
+                                        <td>{{ lecture.name }}</td>
+                                        <td>{{ lecture.chapter }}</td>
+                                        <td>{{ lecture.date.strftime('%Y-%m-%d') }}</td>
+                                        <td>
+                                            <span
+                                                class="badge {% if lecture.transcription_status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                                                {{ lecture.transcription_status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('main.view_lecture', lecture_id=lecture.id) }}"
+                                                class="btn btn-sm btn-primary">View</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No lectures recorded for this course yet.</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

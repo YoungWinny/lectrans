@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lecture.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item">{{ lecture.course.class.name }}</li>
+                <li class="breadcrumb-item">{{ lecture.course.name }}</li>
+                <li class="breadcrumb-item active">{{ lecture.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>{{ lecture.name }}</h2>
+                <div class="text-muted">
+                    Chapter: {{ lecture.chapter }} | Date: {{ lecture.date.strftime('%Y-%m-%d') }}
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="audio-player-container">
+                    <audio src="{{ url_for('static', filename=lecture.audio_path.split('static/')[-1]) }}" class="w-100"
+                        controls id="lectureAudio">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+
+                <div class="transcription-container" id="transcriptionText">
+                    {{ transcription | safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

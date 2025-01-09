@@ -1,0 +1,6 @@
+app/__pycache__/
+venv/
+model/vosk-model-small-en-us-0.15/
+instance/
+.env
+instance

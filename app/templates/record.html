@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Record Lecture{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h2>Record Lecture</h2>
+            </div>
+            <div class="card-body">
+                <form id="recordingForm">
+                    <div class="mb-3">
+                        <label for="class" class="form-label">Class</label>
+                        <select class="form-select" id="class" required>
+                            <option value="">Select a class</option>
+                            {% for class in classes %}
+                            <option value="{{ class.id }}">{{ class.name }} ({{ class.academic_year }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="course" class="form-label">Course</label>
+                        <select class="form-select" id="course" required disabled>
+                            <option value="">Select a course</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Lecture Name</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="chapter" class="form-label">Chapter</label>
+                        <input type="text" class="form-control" id="chapter" required>
+                    </div>
+
+                    <div class="audio-player-container">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="recording-indicator" id="recordingIndicator"></span>
+                            <span id="recordingStatus">Not Recording</span>
+                            <span class="ms-auto" id="duration">00:00:00</span>
+                        </div>
+
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-primary" id="startRecord">Start Recording</button>
+                            <button type="button" class="btn btn-danger" id="stopRecord" disabled>Stop
+                                Recording</button>
+                            <button type="button" class="btn btn-secondary" id="playRecord" disabled>Play
+                                Recording</button>
+                        </div>
+
+                        <audio id="audioPlayback" class="w-100 mt-3" controls style="display: none;"></audio>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100" id="saveRecording" disabled>Save
+                        Recording</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Lecture{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h2>Upload Lecture Recording</h2>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('main.upload_file') }}" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="class" class="form-label">Class</label>
+                        <select class="form-select" id="class" required>
+                            <option value="">Select a class</option>
+                            {% for class in classes %}
+                            <option value="{{ class.id }}">{{ class.name }} ({{ class.academic_year }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="course" class="form-label">Course</label>
+                        <select class="form-select" name="course_id" id="course" required disabled>
+                            <option value="">Select a course</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Lecture Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="chapter" class="form-label">Chapter</label>
+                        <input type="text" class="form-control" id="chapter" name="chapter" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="audio" class="form-label">Audio File</label>
+                        <input type="file" class="form-control" id="audio" name="audio" accept="audio/*" required>
+                        <div class="form-text">Supported formats: WAV, MP3, M4A, OGG</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Upload and Transcribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

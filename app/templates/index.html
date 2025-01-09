@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Lecture Transcriber{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="jumbotron bg-light p-5 rounded">
+                <h1 class="display-4">Welcome to Lecture Transcriber</h1>
+                <p class="lead">Record, transcribe, and organize your lectures easily.</p>
+                <hr class="my-4">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="{{ url_for('main.record') }}" class="btn btn-primary btn-lg me-md-2">Start Recording</a>
+                    <a href="{{ url_for('main.upload') }}" class="btn btn-outline-primary btn-lg">Upload Audio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Recent Lectures</h2>
+            {% if recent_lectures %}
+            <div class="row">
+                {% for lecture in recent_lectures %}
+                <div class="col-md-6 mb-4">
+                    <div class="card lecture-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ lecture.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ lecture.course.name }}</h6>
+                            <p class="card-text">
+                                Chapter: {{ lecture.chapter }}<br>
+                                Date: {{ lecture.date.strftime('%Y-%m-%d') }}<br>
+                                Status: <span
+                                    class="badge {% if lecture.transcription_status == 'completed' %}bg-success{% else %}bg-warning{% endif %}">
+                                    {{ lecture.transcription_status }}
+                                </span>
+                            </p>
+                            <a href="{{ url_for('main.view_lecture', lecture_id=lecture.id) }}"
+                                class="btn btn-primary">View Lecture</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">No lectures recorded yet. Start by recording or uploading one!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
