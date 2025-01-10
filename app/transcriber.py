@@ -31,75 +31,63 @@ class TranscriptionService:
         try:
             # Convert audio to 16kHz mono WAV (Vosk requirement)
             logger.debug("Converting audio to correct format")
-            import subprocess
+            audio = AudioSegment.from_file(audio_path)
+            audio = audio.set_frame_rate(16000).set_channels(1)
+            
+            # Export as temporary WAV file
+            temp_wav = audio_path + '.temp.wav'
+            audio.export(temp_wav, format='wav')
+            logger.debug(f"Temporary WAV file created: {temp_wav}")
 
-            SAMPLE_RATE = 16000
-            # # Create recognizer
-            rec = KaldiRecognizer(self.model, SAMPLE_RATE)
+            # Open the WAV file
+            wf = wave.open(temp_wav, "rb")
+            
+            # Create recognizer
+            rec = KaldiRecognizer(self.model, wf.getframerate())
             rec.SetWords(True)
 
-            with subprocess.Popen(["ffmpeg", "-loglevel", "quiet", "-i",
-                            audio_path,
-                            "-ar", str(SAMPLE_RATE) , "-ac", "1", "-f", "s16le", "-"],
-                            stdout=subprocess.PIPE).stdout as stream:
+            # Process audio file
+            transcription = []
+            while True:
+                data = wf.readframes(4000)
+                if len(data) == 0:
+                    break
+                if rec.AcceptWaveform(data):
+                    result = json.loads(rec.Result())
+                    print(rec.Result())
+                    if result.get('text', ''):
+                        logger.debug(f"Transcribed text: {result['text']}")
+                        transcription.append(result['text'])
 
-                subtitles = rec.SrtResult(stream)
-                print("Subtitles are:")
-                print(subtitles)
-            # audio = AudioSegment.from_file(audio_path)
-            # audio = audio.set_frame_rate(16000).set_channels(1)
+            # Get final result
+            final = json.loads(rec.FinalResult())
+            print(rec.FinalResult())
+            if final.get('text', ''):
+                logger.debug(f"Final transcribed text: {final['text']}")
+                transcription.append(final['text'])
+
+            # Clean up temporary file
+            wf.close()
+            os.remove(temp_wav)
+            logger.debug("Temporary WAV file removed")
+
+            # Write to markdown file
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write('# Lecture Transcription\n\n')
+                for text in transcription:
+                    if text.strip():  # Only write non-empty lines
+                        f.write(f"{text}\n\n")
+
+            logger.info(f"Transcription completed and saved to {output_path}")
             
-            # # Export as temporary WAV file
-            # temp_wav = audio_path + '.temp.wav'
-            # audio.export(temp_wav, format='wav')
-            # logger.debug(f"Temporary WAV file created: {temp_wav}")
-
-            # # Open the WAV file
-            # wf = wave.open(temp_wav, "rb")
-
-            # # Process audio file
-            # transcription = []
-            # while True:
-            #     data = wf.readframes(4000)
-            #     if len(data) == 0:
-            #         break
-            #     if rec.AcceptWaveform(data):
-            #         result = json.loads(rec.Result())
-            #         print(rec.Result())
-            #         if result.get('text', ''):
-            #             logger.debug(f"Transcribed text: {result['text']}")
-            #             transcription.append(result['text'])
-
-            # # Get final result
-            # final = json.loads(rec.FinalResult())
-            # print(rec.FinalResult())
-            # if final.get('text', ''):
-            #     logger.debug(f"Final transcribed text: {final['text']}")
-            #     transcription.append(final['text'])
-
-            # # Clean up temporary file
-            # wf.close()
-            # os.remove(temp_wav)
-            # logger.debug("Temporary WAV file removed")
-
-            # # Write to markdown file
-            # with open(output_path, 'w', encoding='utf-8') as f:
-            #     f.write('# Lecture Transcription\n\n')
-            #     for text in transcription:
-            #         if text.strip():  # Only write non-empty lines
-            #             f.write(f"{text}\n\n")
-
-            # logger.info(f"Transcription completed and saved to {output_path}")
-            
-            # # If no transcription was generated, log a warning
-            # if not transcription:
-            #     logger.warning("No transcription was generated!")
-            #     return False
+            # If no transcription was generated, log a warning
+            if not transcription:
+                logger.warning("No transcription was generated!")
+                return False
                 
             return True
 
         except Exception as e:
-            breakpoint()
             logger.error(f"Error during transcription: {str(e)}", exc_info=True)
             raise
 

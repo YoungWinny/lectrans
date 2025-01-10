@@ -9,6 +9,7 @@ from app.transcriber import TranscriptionService
 import soundfile as sf
 import numpy as np
 import subprocess
+os.environ["FFMPEG_BINARY"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 
 from pydub import AudioSegment
 import io
@@ -130,8 +131,6 @@ def upload_file():
         filename = secure_filename(f"{uuid.uuid4()}.{audio_file.filename.rsplit('.', 1)[1]}")
         audio_path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'audio', filename)
         audio_file.save(audio_path)
-        print('Displaying audio path')
-        print(audio_path)
         
         # Create lecture record
         lecture = Lecture(
@@ -148,7 +147,6 @@ def upload_file():
         # Start transcription
         trans_filename = f"{filename.rsplit('.', 1)[0]}.md"
         trans_path = os.path.join(current_app.config['UPLOAD_FOLDER'], 'transcriptions', trans_filename)
-        print("Creating transcription from route...")
         transcriber.transcribe_file(audio_path, trans_path)
         
         lecture.transcription_path = trans_path

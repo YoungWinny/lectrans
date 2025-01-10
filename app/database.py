@@ -3,6 +3,7 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlite3 import Connection as SQLite3Connection
 import os
+os.environ["FFMPEG_BINARY"] = r"C:\ffmpeg\bin\ffmpeg.exe"
 
 # Create database instance
 db = SQLAlchemy()
