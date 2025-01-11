@@ -21,7 +21,7 @@ This project is a **Lecture Recording and Transcription App** that allows users 
 2. **FFmpeg installed** on your system (for audio processing).
 3. **Vosk Speech Recognition Model**:
    - Download the model `vosk-model-small-en-us-0.15` from [Vosk Models](https://alphacephei.com/vosk/models).
-   - Extract the contents and place them in the `model/` folder in the root of the project.
+   - Extract the contents and place them in the `model/` folder in the root of the project( if the model folder is not present create it in the root of the project) .
 
 ### **Installing FFmpeg**
 FFmpeg for Conversion: The project uses FFmpeg to convert the WebM file to WAV. This is much more reliable for handling various audio codecs that might be inside the WebM container.
@@ -33,6 +33,7 @@ FFmpeg for Conversion: The project uses FFmpeg to convert the WebM file to WAV. 
    - Go to **Control Panel > System > Advanced system settings > Environment Variables**.
    - Under **System Variables**, select `Path` and click **Edit**.
    - Add the path to the `bin` directory (e.g., `C:\ffmpeg\bin`).
+   - make sure ffmpeg is present in your virtual environment.
 4. Verify installation:
    ```bash
    ffmpeg -version
